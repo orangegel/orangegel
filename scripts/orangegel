@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+VERSION="0.1.0"
+
+show_help() {
+  cat <<'EOF'
+OrangeGel — Native Static Site Studio (Tauri v2 + Angular)
+
+Usage:
+  orangegel [directory-or-file]
+  orangegel .
+  orangegel --help | -h
+  orangegel --version | -v
+
+Examples:
+  orangegel .                       Open the current directory in OrangeGel
+  orangegel ~/Sites/my-hugo-blog    Open a specific static site project
+EOF
+}
+
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+  show_help
+  exit 0
+fi
+
+if [[ "${1:-}" == "--version" || "${1:-}" == "-v" ]]; then
+  echo "orangegel ${VERSION}"
+  exit 0
+fi
+
+RAW_TARGET="${1:-.}"
+if [[ -d "$RAW_TARGET" ]]; then
+  TARGET_DIR="$(cd "$RAW_TARGET" 2>/dev/null && pwd || pwd)"
+elif [[ -f "$RAW_TARGET" ]]; then
+  TARGET_DIR="$(cd "$(dirname "$RAW_TARGET")" 2>/dev/null && pwd || pwd)"
+else
+  TARGET_DIR="$(cd "$RAW_TARGET" 2>/dev/null && pwd || pwd)"
+fi
+
+export ORANGEGEL_OPEN_DIR="$TARGET_DIR"
+
+APP_CANDIDATES=(
+  "/Applications/OrangeGel.app/Contents/MacOS/orangegel"
+  "$HOME/Applications/OrangeGel.app/Contents/MacOS/orangegel"
+  "/Users/jaysmith/Projects/OpenSource/MyExternal/OrangeGel/src-tauri/target/release/bundle/macos/OrangeGel.app/Contents/MacOS/orangegel"
+  "/Users/jaysmith/Projects/OpenSource/MyExternal/OrangeGel/src-tauri/target/release/orangegel"
+)
+
+for BIN in "${APP_CANDIDATES[@]}"; do
+  if [[ -x "$BIN" ]]; then
+    nohup "$BIN" "$TARGET_DIR" >/dev/null 2>&1 &
+    disown || true
+    exit 0
+  fi
+done
+
+echo "Error: Could not find OrangeGel.app binary. Build or move OrangeGel.app to /Applications." >&2
+exit 1

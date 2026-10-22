@@ -1,0 +1,76 @@
+name: OrangeGel CI (Blacksmith)
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  verify-linux:
+    name: Verify Angular + Rust Core (Blacksmith Linux)
+    runs-on: blacksmith-4vcpu-ubuntu-2204
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Linux Tauri system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Setup Node.js 22 (Blacksmith)
+        uses: useblacksmith/setup-node@v5
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Setup Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Blacksmith Rust Cache
+        uses: useblacksmith/rust-cache@v1
+        with:
+          workspaces: "src-tauri -> target"
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Run Frontend Unit Tests (Vitest)
+        run: npm test
+
+      - name: Build Angular Production Bundle
+        run: npm run build
+
+      - name: Run Rust Backend Unit Tests (20 SSG Adapters + Multi-Provider Deploy)
+        run: cargo test --manifest-path src-tauri/Cargo.toml
+
+  verify-macos:
+    name: Verify macOS Tauri App Build (Blacksmith macOS)
+    runs-on: blacksmith-8vcpu-macos-14
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22 (Blacksmith)
+        uses: useblacksmith/setup-node@v5
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Setup Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Blacksmith Rust Cache
+        uses: useblacksmith/rust-cache@v1
+        with:
+          workspaces: "src-tauri -> target"
+
+      - name: Install dependencies & build Angular
+        run: |
+          npm ci
+          npm run build
+
+      - name: Run Rust Backend Tests on macOS
+        run: cargo test --manifest-path src-tauri/Cargo.toml

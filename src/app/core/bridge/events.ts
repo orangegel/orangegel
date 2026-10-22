@@ -1,0 +1,41 @@
+export const TAURI_EVENTS = {
+  SSG_LOG: 'ssg:log',
+  SSG_STATUS: 'ssg:status',
+  DEPLOY_EVENT: 'deploy:event',
+  PROJECT_CHANGED: 'project:changed'
+} as const;
+
+export const TAURI_COMMANDS = {
+  GET_SSG_CATALOG: 'get_ssg_catalog',
+  OPEN_PROJECT: 'open_project',
+  CHOOSE_PROJECT: 'choose_project',
+  CREATE_NEW_SITE: 'create_new_site',
+  SWITCH_PROJECT_SSG: 'switch_project_ssg',
+  REFRESH_PROJECT_TREE: 'refresh_project_tree',
+  READ_DOCUMENT: 'read_document',
+  SAVE_DOCUMENT: 'save_document',
+  CREATE_CONTENT: 'create_content',
+  DELETE_FILE: 'delete_file',
+  GET_SITE_GRAPH: 'get_site_graph',
+  START_DEV_SERVER: 'start_dev_server',
+  STOP_DEV_SERVER: 'stop_dev_server',
+  GET_SERVER_STATUS: 'get_server_status',
+  GET_SERVER_LOGS: 'get_server_logs',
+  RUN_PRODUCTION_BUILD: 'run_production_build',
+  OPEN_IN_SYSTEM_BROWSER: 'open_in_system_browser',
+  READ_PROJECT_DICTIONARY: 'read_project_dictionary',
+  ADD_PROJECT_DICTIONARY_WORD: 'add_project_dictionary_word',
+  AI_REVISE: 'ai_revise',
+  GIT_STATUS: 'git_status',
+  GIT_DIFF: 'git_diff',
+  GIT_COMMIT: 'git_commit',
+  GIT_PUSH: 'git_push',
+  GET_DEPLOY_CONFIG: 'get_deploy_config',
+  SAVE_DEPLOY_CONFIG: 'save_deploy_config',
+  PLAN_DEPLOY: 'plan_deploy',
+  RUN_DEPLOY: 'run_deploy',
+  GET_SETTINGS: 'get_settings',
+  SAVE_SETTINGS: 'save_settings',
+  GET_STARTUP_PROJECT: 'get_startup_project',
+  INSTALL_CLI_LAUNCHER: 'install_cli_launcher'
+} as const;

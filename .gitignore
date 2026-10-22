@@ -1,0 +1,19 @@
+# Dependencies & Build Outputs
+node_modules/
+dist/
+.angular/
+src-tauri/target/
+*.dmg
+
+# OS & Editor
+.DS_Store
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Signing & Secrets
+*.p12
+*.cer
+.env
+.env.*
